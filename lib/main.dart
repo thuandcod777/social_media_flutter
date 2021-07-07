@@ -2,7 +2,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_media_flutter/constants/Constantcolors.dart';
+import 'package:social_media_flutter/screens/home_page/home_helper.dart';
 import 'package:social_media_flutter/screens/landing_page.dart/landing_utils.dart';
+import 'package:social_media_flutter/screens/profile/profile_helper.dart';
 import 'package:social_media_flutter/services/authentication.dart';
 import 'package:social_media_flutter/screens/landing_page.dart/landing_helper.dart';
 import 'package:social_media_flutter/screens/landing_page.dart/landing_service.dart';
@@ -42,6 +44,12 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => FirebaseOperations(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ProfileHelpers(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => HomepageHelpers(),
         ),
         ChangeNotifierProvider(create: (_) => Authentication())
       ],

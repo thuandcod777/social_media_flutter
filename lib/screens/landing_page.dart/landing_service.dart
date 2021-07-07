@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -16,6 +18,8 @@ class LandingService with ChangeNotifier {
   TextEditingController userNameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController userEmailController = TextEditingController();
+
+  File _image;
 
   Widget passwordLessSignIn(BuildContext context) {
     return SizedBox(
@@ -86,9 +90,9 @@ class LandingService with ChangeNotifier {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
                   child: TextField(
-                    controller: userNameController,
+                    controller: userEmailController,
                     decoration: InputDecoration(
-                      hintText: 'Enter User',
+                      hintText: 'Enter Email',
                       hintStyle: TextStyle(
                           color: constantColors.whiteColor,
                           fontWeight: FontWeight.bold,
@@ -125,10 +129,10 @@ class LandingService with ChangeNotifier {
                     color: constantColors.whiteColor,
                   ),
                   onPressed: () {
-                    if (userNameController.text.isNotEmpty) {
+                    if (userEmailController.text.isNotEmpty) {
                       Provider.of<Authentication>(context, listen: false)
                           .logIntoAccount(
-                              userNameController.text, passwordController.text)
+                              userEmailController.text, passwordController.text)
                           .whenComplete(() {
                         Navigator.pushReplacement(
                             context,
@@ -170,9 +174,6 @@ class LandingService with ChangeNotifier {
                   ),
                 ),
                 CircleAvatar(
-                  backgroundImage: FileImage(
-                      Provider.of<LandingUtils>(context, listen: true)
-                          .userAvatar),
                   backgroundColor: constantColors.redColor,
                   radius: 80.0,
                   child: GestureDetector(onTap: () {
@@ -183,7 +184,7 @@ class LandingService with ChangeNotifier {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
                   child: TextField(
-                    controller: userEmailController,
+                    controller: userNameController,
                     decoration: InputDecoration(
                       hintText: 'Enter User',
                       hintStyle: TextStyle(
@@ -200,8 +201,7 @@ class LandingService with ChangeNotifier {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
                   child: TextField(
-                    keyboardType: TextInputType.emailAddress,
-                    controller: userNameController,
+                    controller: userEmailController,
                     decoration: InputDecoration(
                       hintText: 'Enter Email',
                       hintStyle: TextStyle(
@@ -240,10 +240,10 @@ class LandingService with ChangeNotifier {
                     color: constantColors.whiteColor,
                   ),
                   onPressed: () {
-                    if (userNameController.text.isNotEmpty) {
+                    if (userEmailController.text.isNotEmpty) {
                       Provider.of<Authentication>(context, listen: false)
                           .createAccount(
-                              userNameController.text, passwordController.text)
+                              userEmailController.text, passwordController.text)
                           .whenComplete(() {
                         Provider.of<FirebaseOperations>(context, listen: false)
                             .createUserCollection(context, {
@@ -251,6 +251,7 @@ class LandingService with ChangeNotifier {
                                   listen: false)
                               .getUserUid,
                           'useremail': userEmailController.text,
+                          'password': passwordController.text,
                           'username': userNameController.text,
                           'userimage':
                               Provider.of<LandingUtils>(context, listen: false)
@@ -347,12 +348,12 @@ class LandingService with ChangeNotifier {
                                   fontWeight: FontWeight.bold),
                             ),
                             onPressed: () {
+                              Navigator.pop(context);
                               Provider.of<FirebaseOperations>(context,
                                       listen: false)
                                   .uploadUserAvatar(context)
                                   .whenComplete(() {
                                 signInSheet(context);
-                                Navigator.pop(context);
                               });
                             })
                       ],
