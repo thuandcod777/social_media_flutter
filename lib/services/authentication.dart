@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:social_media_flutter/services/database_service.dart';
 //import 'package:flutter_login_facebook/flutter_login_facebook.dart';
 
 class Authentication with ChangeNotifier {
@@ -56,6 +57,22 @@ class Authentication with ChangeNotifier {
 
   Future signOutWithGoogle() async {
     return googleSignIn.signOut();
+  }
+
+  Future deleteUser(String email, String password) async {
+    try {
+      User user = await firebaseAuth.currentUser;
+      AuthCredential credential =
+          EmailAuthProvider.credential(email: email, password: password);
+      UserCredential result =
+          await user.reauthenticateWithCredential(credential);
+      await DatabaseService(uid: result.user.uid).deleteuser();
+      await result.user.delete();
+      return true;
+    } catch (err) {
+      print(err.toString());
+      return null;
+    }
   }
 
   /* Future signInFacebook() async {

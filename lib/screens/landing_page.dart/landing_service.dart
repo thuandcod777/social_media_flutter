@@ -19,8 +19,6 @@ class LandingService with ChangeNotifier {
   TextEditingController passwordController = TextEditingController();
   TextEditingController userEmailController = TextEditingController();
 
-  File _image;
-
   Widget passwordLessSignIn(BuildContext context) {
     return SizedBox(
       height: MediaQuery.of(context).size.height * 0.4,
@@ -38,7 +36,11 @@ class LandingService with ChangeNotifier {
                   snapshot.data.docs.map((DocumentSnapshot documentSnapshot) {
                 return ListTile(
                   trailing: IconButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      await Provider.of<Authentication>(context, listen: false)
+                          .deleteUser(userEmailController.text,
+                              passwordController.text);
+                    },
                     icon: Icon(
                       FontAwesomeIcons.trashAlt,
                       color: constantColors.redColor,
