@@ -2,19 +2,17 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
 import 'package:social_media_flutter/constants/Constantcolors.dart';
-import 'package:social_media_flutter/screens/landing_page.dart/landing_service.dart';
 
 class LandingUtils with ChangeNotifier {
   final ConstantColors constantColors = ConstantColors();
   final picker = ImagePicker();
-  File userAvatar;
-  File get getUserAvatar => userAvatar;
+  //File userAvatar;
+  //File get getUserAvatar => userAvatar;
   String userAvatarUrl;
   String get getUserAvatarUrl => userAvatarUrl;
 
-  Future pickUserAvatar(BuildContext context, ImageSource source) async {
+  /*Future pickUserAvatar(BuildContext context, ImageSource source) async {
     final pickerUserAvatar = await picker.getImage(source: source);
     pickerUserAvatar == null
         ? print('Select image')
@@ -26,9 +24,9 @@ class LandingUtils with ChangeNotifier {
             .showUserAvatar(context)
         : print('image upload error');
     notifyListeners();
-  }
+  }*/
 
-  Future selectAvatarOptionSheet(BuildContext context) async {
+  /* Future selectAvatarOptionSheet(BuildContext context) async {
     return showModalBottomSheet(
         context: context,
         builder: (context) {
@@ -90,5 +88,25 @@ class LandingUtils with ChangeNotifier {
                 borderRadius: BorderRadius.circular(12.0)),
           );
         });
+  }*/
+
+  File imageUserAvatar;
+  File get getUserAvatars => imageUserAvatar;
+  String pickerError = '';
+  bool isPicAvail = false;
+  Future<File> getImage() async {
+    final picker = ImagePicker();
+    final pickedFile =
+        await picker.getImage(source: ImageSource.gallery, imageQuality: 20);
+
+    if (pickedFile != null) {
+      this.imageUserAvatar = File(pickedFile.path);
+      notifyListeners();
+    } else {
+      this.pickerError = 'No image selected';
+      print('No image selected');
+      notifyListeners();
+    }
+    return this.imageUserAvatar;
   }
 }

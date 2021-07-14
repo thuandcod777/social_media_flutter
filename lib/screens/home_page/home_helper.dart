@@ -8,6 +8,7 @@ import 'package:social_media_flutter/services/firebase_operations.dart';
 
 class HomepageHelpers with ChangeNotifier {
   ConstantColors constantColors = ConstantColors();
+  String url = '';
 
   Widget bottomNavBar(
       BuildContext context, int index, PageController pageController) {
@@ -27,21 +28,26 @@ class HomepageHelpers with ChangeNotifier {
       backgroundColor: Color(0xff040307),
       items: [
         CustomNavigationBarItem(
-            icon: Icon(
-          EvaIcons.home,
-          color: Colors.white,
-        )),
+          icon: Icon(
+            EvaIcons.home,
+            color: Colors.white,
+          ),
+        ),
         CustomNavigationBarItem(
             icon: Icon(Icons.message_rounded, color: Colors.white)),
         CustomNavigationBarItem(
           icon: CircleAvatar(
-            radius: 35.0,
-            backgroundColor: constantColors.blueGreyColor,
-            backgroundImage: NetworkImage(
-                Provider.of<FirebaseOperations>(context, listen: false)
-                    .getinitUserImage),
-          ),
-        ),
+              radius: 35.0,
+              backgroundColor: constantColors.blueGreyColor,
+              backgroundImage: Provider.of<FirebaseOperations>(context,
+                              listen: false)
+                          .getinitUserImage !=
+                      null
+                  ? NetworkImage(
+                      Provider.of<FirebaseOperations>(context, listen: false)
+                          .getinitUserImage)
+                  : null),
+        )
       ],
     );
   }

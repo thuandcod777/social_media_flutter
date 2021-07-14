@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:social_media_flutter/constants/Constantcolors.dart';
+import 'package:social_media_flutter/screens/landing_page.dart/landing_utils.dart';
 import 'package:social_media_flutter/services/authentication.dart';
 import 'package:social_media_flutter/screens/home_page/home_page.dart';
 import 'package:social_media_flutter/screens/landing_page.dart/landing_service.dart';
@@ -14,6 +17,8 @@ class LandingHelpers with ChangeNotifier {
   TextEditingController userNameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController userEmailController = TextEditingController();
+
+  File _image;
 
   Widget bodyImage(BuildContext context) {
     return Container(
@@ -210,5 +215,26 @@ class LandingHelpers with ChangeNotifier {
                     topRight: Radius.circular(15.0))),
           );
         });
+  }
+
+  Widget pickImage(BuildContext context) {
+    final _getImageData = Provider.of<LandingUtils>(context);
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: SizedBox(
+        height: 150.0,
+        width: 150.0,
+        child: Card(
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(4),
+            child: _image == null
+                ? Center(
+                    child: Text('Add Shop Image',
+                        style: TextStyle(color: Colors.grey)))
+                : Image.file(_image, fit: BoxFit.fill),
+          ),
+        ),
+      ),
+    );
   }
 }

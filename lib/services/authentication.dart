@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:social_media_flutter/services/database_service.dart';
@@ -59,7 +61,8 @@ class Authentication with ChangeNotifier {
     return googleSignIn.signOut();
   }
 
-  Future deleteUser(String email, String password) async {
+  //the way another
+  /*Future deleteUser(String email, String password) async {
     try {
       User user = await firebaseAuth.currentUser;
       AuthCredential credential =
@@ -73,7 +76,7 @@ class Authentication with ChangeNotifier {
       print(err.toString());
       return null;
     }
-  }
+  }*/
 
   /* Future signInFacebook() async {
     try {

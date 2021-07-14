@@ -3,10 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:social_media_flutter/constants/Constantcolors.dart';
+import 'package:social_media_flutter/screens/landing_page.dart/card_image.dart';
 import 'package:social_media_flutter/screens/landing_page.dart/landing_utils.dart';
 import 'package:social_media_flutter/services/authentication.dart';
 import 'package:social_media_flutter/screens/home_page/home_page.dart';
@@ -18,6 +18,8 @@ class LandingService with ChangeNotifier {
   TextEditingController userNameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController userEmailController = TextEditingController();
+
+  File _image;
 
   Widget passwordLessSignIn(BuildContext context) {
     return SizedBox(
@@ -35,15 +37,44 @@ class LandingService with ChangeNotifier {
               children:
                   snapshot.data.docs.map((DocumentSnapshot documentSnapshot) {
                 return ListTile(
-                  trailing: IconButton(
-                    onPressed: () async {
-                      await Provider.of<Authentication>(context, listen: false)
-                          .deleteUser(userEmailController.text,
-                              passwordController.text);
-                    },
-                    icon: Icon(
-                      FontAwesomeIcons.trashAlt,
-                      color: constantColors.redColor,
+                  trailing: Container(
+                    height: 150.0,
+                    width: 100.0,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        IconButton(
+                          onPressed: () async {
+                            await Provider.of<Authentication>(context,
+                                    listen: false)
+                                .logIntoAccount(documentSnapshot['useremail'],
+                                    documentSnapshot['password'])
+                                .whenComplete(() {
+                              Navigator.pushReplacement(
+                                  context,
+                                  PageTransition(
+                                      child: HomePage(),
+                                      type: PageTransitionType.fade));
+                            });
+                          },
+                          icon: Icon(
+                            FontAwesomeIcons.check,
+                            color: constantColors.whiteColor,
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () async {
+                            await Provider.of<FirebaseOperations>(context,
+                                    listen: false)
+                                .deleteUserData(
+                                    documentSnapshot['useruid'], 'user');
+                          },
+                          icon: Icon(
+                            FontAwesomeIcons.trashAlt,
+                            color: constantColors.whiteColor,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   leading: CircleAvatar(
@@ -175,14 +206,18 @@ class LandingService with ChangeNotifier {
                     color: constantColors.whiteColor,
                   ),
                 ),
-                CircleAvatar(
+                /*CircleAvatar(
+                  backgroundImage: FileImage(
+                      Provider.of<LandingUtils>(context, listen: false)
+                          .getUserAvatar),
                   backgroundColor: constantColors.redColor,
                   radius: 80.0,
                   child: GestureDetector(onTap: () {
                     Provider.of<LandingUtils>(context, listen: false)
                         .selectAvatarOptionSheet(context);
                   }),
-                ),
+                ),*/
+                CardImage(),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
                   child: TextField(
@@ -300,7 +335,7 @@ class LandingService with ChangeNotifier {
         });
   }
 
-  showUserAvatar(BuildContext context) {
+  /* showUserAvatar(BuildContext context) {
     return showModalBottomSheet(
         context: context,
         builder: (context) {
@@ -369,5 +404,6 @@ class LandingService with ChangeNotifier {
                       topRight: Radius.circular(12.0),
                       topLeft: Radius.circular(12.0))));
         });
-  }
+  }*/
+
 }

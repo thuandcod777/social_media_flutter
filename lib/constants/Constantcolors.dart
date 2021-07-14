@@ -11,5 +11,6 @@ class ConstantColors {
   final Color greenColor = Colors.greenAccent;
   final Color yellowColor = Colors.yellow;
   final Color transperant = Colors.transparent;
-  final Color greyColor = Colors.grey.shade600;
+  final Color greyColor = Colors.grey.shade300;
+  final Color blueGrey = Colors.blueGrey[400];
 }

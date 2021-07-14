@@ -1,10 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:social_media_flutter/constants/Constantcolors.dart';
-import 'package:social_media_flutter/screens/landing_page.dart/lading_page.dart';
 import 'package:social_media_flutter/screens/profile/profile_helper.dart';
 import 'package:social_media_flutter/services/authentication.dart';
 
