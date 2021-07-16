@@ -3,22 +3,31 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Users {
   String userid;
   String username;
-  String userimage;
+  String photoUrl;
+  String country;
+  String email;
   Timestamp singnedUpAt;
   bool isOnline;
+  String id;
 
   Users(
       {this.userid,
       this.username,
-      this.userimage,
       this.singnedUpAt,
-      this.isOnline});
+      this.email,
+      this.photoUrl,
+      this.country,
+      this.isOnline,
+      this.id});
 
   Users.fromJson(Map<String, dynamic> json) {
-    username = json['userimage'];
+    username = json['username'];
     singnedUpAt = json['singnedUpAt'];
-    userimage = json['userimage'];
+    photoUrl = json['photoUrl'];
+    country = json['country'];
     isOnline = json['isOnline'];
+    email = json['email'];
+    id = json['id'];
   }
 
   Map<String, dynamic> toJson() {
@@ -26,8 +35,11 @@ class Users {
 
     data['username'] = this.username;
     data['singnedUpAt'] = this.singnedUpAt;
-    data['userimage'] = this.userimage;
+    data['photoUrl'] = this.photoUrl;
+    data['country'] = this.country;
     data['isOnline'] = this.isOnline;
+    data['email'] = this.email;
+    data['id'] = this.id;
 
     return data;
   }
