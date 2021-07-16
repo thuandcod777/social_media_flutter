@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_media_flutter/constants/Constantcolors.dart';
 import 'package:social_media_flutter/screens/login/login.dart';
+import 'package:social_media_flutter/screens/main/main_screen.dart';
+import 'package:social_media_flutter/screens/profile_picture/profile_picture.dart';
+import 'package:social_media_flutter/screens/register/register.dart';
 import 'package:social_media_flutter/utils/config.dart';
 import 'package:social_media_flutter/utils/provider.dart';
 
@@ -17,15 +20,22 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final ConstantColors constantColors = ConstantColors();
     return MultiProvider(
-        child: MaterialApp(
-          title: 'Flutter Demo',
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-              fontFamily: 'Merri',
-              accentColor: constantColors.blueColor,
-              canvasColor: Colors.transparent),
-          home: Login(),
-        ),
-        providers: providers);
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+            fontFamily: 'Merri',
+            accentColor: constantColors.blueColor,
+            canvasColor: Colors.transparent),
+        home: Login(),
+        routes: {
+          MainScreen.id: (context) => MainScreen(),
+          Login.id: (context) => Login(),
+          Registers.id: (context) => Registers(),
+          ProfilePicture.id: (context) => ProfilePicture()
+        },
+      ),
+      providers: providers,
+    );
   }
 }

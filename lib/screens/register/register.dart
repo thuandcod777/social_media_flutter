@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_media_flutter/screens/login/login.dart';
 import 'package:social_media_flutter/screens/widget/text_form_widget.dart';
+import 'package:social_media_flutter/utils/validation.dart';
 import 'package:social_media_flutter/view_model.dart/auth/register_view_model.dart';
 
 class Registers extends StatefulWidget {
+  static const id = 'register_screen';
+
   const Registers({Key key}) : super(key: key);
 
   @override
@@ -18,6 +21,7 @@ class _RegisterState extends State<Registers> {
     RegisterViewModel viewModel = Provider.of<RegisterViewModel>(context);
 
     return Scaffold(
+      key: viewModel.scaffoldKey,
       backgroundColor: Colors.orange,
       body: ListView(
         children: [
@@ -77,57 +81,79 @@ class _RegisterState extends State<Registers> {
   }
 
   buildTextForm(BuildContext context, RegisterViewModel viewModel) => Form(
+        key: viewModel.formKey,
         child: Column(
           children: [
             TextFormBuilder(
-                obscureText: false,
-                hintText: 'Username',
-                textInputType: TextInputType.name,
-                textInputAction: TextInputAction.next,
-                onSaved: (String val) {
-                  viewModel.setName(val)(val);
-                }),
+              enable: !viewModel.loading,
+              obscureText: false,
+              hintText: 'Username',
+              validateFunction: Validation.validateName,
+              textInputAction: TextInputAction.next,
+              onSaved: (String val) {
+                viewModel.setName(val);
+              },
+              focusNode: viewModel.usernameFN,
+              nextFocusNode: viewModel.emailFN,
+            ),
             SizedBox(
               height: 10.0,
             ),
             TextFormBuilder(
-                obscureText: false,
-                hintText: 'Email',
-                textInputType: TextInputType.emailAddress,
-                textInputAction: TextInputAction.next,
-                onSaved: (String val) {
-                  viewModel.setEmail(val);
-                }),
+              enable: !viewModel.loading,
+              obscureText: false,
+              hintText: 'Email',
+              textInputAction: TextInputAction.next,
+              onSaved: (String val) {
+                viewModel.setEmail(val);
+              },
+              validateFunction: Validation.validateEmail,
+              focusNode: viewModel.emailFN,
+              nextFocusNode: viewModel.countryFN,
+            ),
             SizedBox(
               height: 10.0,
             ),
             TextFormBuilder(
-                obscureText: false,
-                hintText: 'Country',
-                textInputAction: TextInputAction.next,
-                onSaved: (String val) {
-                  viewModel.setCountry(val);
-                }),
+              enable: !viewModel.loading,
+              obscureText: false,
+              hintText: 'Country',
+              textInputAction: TextInputAction.next,
+              onSaved: (String val) {
+                viewModel.setCountry(val);
+              },
+              focusNode: viewModel.countryFN,
+              nextFocusNode: viewModel.passFN,
+            ),
             SizedBox(
               height: 10.0,
             ),
             TextFormBuilder(
-                hintText: 'Password',
-                obscureText: true,
-                textInputAction: TextInputAction.next,
-                onSaved: (String val) {
-                  viewModel.setPassword(val);
-                }),
+              enable: !viewModel.loading,
+              hintText: 'Password',
+              obscureText: true,
+              validateFunction: Validation.validatePassword,
+              textInputAction: TextInputAction.next,
+              onSaved: (String val) {
+                viewModel.setPassword(val);
+              },
+              focusNode: viewModel.passFN,
+              nextFocusNode: viewModel.cPassFN,
+            ),
             SizedBox(
               height: 10.0,
             ),
             TextFormBuilder(
-                obscureText: true,
-                hintText: 'Confirm Password',
-                textInputAction: TextInputAction.done,
-                onSaved: (String val) {
-                  viewModel.setCPassword(val);
-                }),
+              enable: !viewModel.loading,
+              obscureText: true,
+              hintText: 'Confirm Password',
+              textInputAction: TextInputAction.done,
+              submitAction: () => viewModel.register(context),
+              onSaved: (String val) {
+                viewModel.setCPassword(val);
+              },
+              focusNode: viewModel.cPassFN,
+            ),
             SizedBox(
               height: 10.0,
             ),

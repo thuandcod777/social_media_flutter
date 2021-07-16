@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_media_flutter/screens/register/register.dart';
 import 'package:social_media_flutter/screens/widget/text_form_widget.dart';
+import 'package:social_media_flutter/utils/validation.dart';
 import 'package:social_media_flutter/view_model.dart/auth/login_view_mode.dart';
 
 class Login extends StatefulWidget {
+  static const id = 'login_screen';
   const Login({Key key}) : super(key: key);
 
   @override
@@ -64,27 +66,36 @@ class _LoginState extends State<Login> {
   }
 
   buildForm(BuildContext context, LoginViewModel viewModel) => Form(
-          child: Column(
+      key: viewModel.formKey,
+      child: Column(
         children: [
           TextFormBuilder(
-              hintText: 'Email',
-              obscureText: false,
-              textInputType: TextInputType.emailAddress,
-              textInputAction: TextInputAction.next,
-              onSaved: (String val) {
-                viewModel.setEmail(val);
-              }),
+            enable: !viewModel.loading,
+            hintText: 'Email',
+            obscureText: false,
+            validateFunction: Validation.validateEmail,
+            textInputType: TextInputType.emailAddress,
+            textInputAction: TextInputAction.next,
+            onSaved: (String val) {
+              viewModel.setEmail(val);
+            },
+            focusNode: viewModel.emailFN,
+            nextFocusNode: viewModel.passFN,
+          ),
           SizedBox(
             height: 10.0,
           ),
           TextFormBuilder(
+            enable: !viewModel.loading,
             hintText: 'Password',
             textInputType: TextInputType.visiblePassword,
             textInputAction: TextInputAction.done,
             obscureText: true,
+            submitAction: () => viewModel.login(context),
             onSaved: (String val) {
               viewModel.setPassword(val);
             },
+            focusNode: viewModel.passFN,
           ),
           SizedBox(
             height: 10.0,
