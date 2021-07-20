@@ -1,15 +1,28 @@
 import 'package:flutter/material.dart';
 
-class TimeLimeScreen extends StatefulWidget {
-  const TimeLimeScreen({Key key}) : super(key: key);
+class TimeLineScreen extends StatefulWidget {
+  const TimeLineScreen({Key key}) : super(key: key);
 
   @override
-  _TimeLimeScreenState createState() => _TimeLimeScreenState();
+  _TimeLineScreenState createState() => _TimeLineScreenState();
 }
 
-class _TimeLimeScreenState extends State<TimeLimeScreen> {
+class _TimeLineScreenState extends State<TimeLineScreen> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.orange,
+        title: Text(
+          'Soccial Media',
+          style: TextStyle(color: Colors.white),
+        ),
+        centerTitle: true,
+        actions: [
+          IconButton(icon: Icon(Icons.chat_bubble), onPressed: () {}),
+        ],
+      ),
+      body: Container(),
+    );
   }
 }

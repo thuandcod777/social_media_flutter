@@ -13,3 +13,4 @@ CollectionReference usersRef = firestore.collection('users');
 CollectionReference postRef = firestore.collection('posts');
 
 Reference profilePic = storage.ref().child('profilePic');
+Reference posts = storage.ref().child('posts');

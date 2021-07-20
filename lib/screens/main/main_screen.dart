@@ -3,6 +3,7 @@ import 'package:social_media_flutter/screens/message/message.dart';
 import 'package:social_media_flutter/screens/profile/profile.dart';
 import 'package:social_media_flutter/screens/timeline/time_line.dart';
 import 'package:animations/animations.dart';
+import 'package:social_media_flutter/screens/widget/fab_container.dart';
 
 class MainScreen extends StatefulWidget {
   static const id = 'main_screen';
@@ -19,7 +20,7 @@ class _MainScreenState extends State<MainScreen> {
     {
       'title': 'Home',
       'icon': Icons.home,
-      'page': TimeLimeScreen(),
+      'page': TimeLineScreen(),
       'index': 0,
     },
     {
@@ -60,28 +61,27 @@ class _MainScreenState extends State<MainScreen> {
                 width: 5.0,
               ),
               for (Map item in pages)
-                /* item['index'] == 2
+                item['index'] == 1
                     ? buildFab()
-                    :*/
-                Padding(
-                  padding: const EdgeInsets.only(top: 5.0),
-                  child: IconButton(
-                      icon: Icon(
-                        item['icon'],
-                        color: item['index'] != _page
-                            ? Colors.grey
-                            : Colors.orange,
-                        size: 20.0,
+                    : Padding(
+                        padding: const EdgeInsets.only(top: 5.0),
+                        child: IconButton(
+                            icon: Icon(
+                              item['icon'],
+                              color: item['index'] != _page
+                                  ? Colors.grey
+                                  : Colors.orange,
+                              size: 20.0,
+                            ),
+                            onPressed: () => navigationTapped(item['index'])),
                       ),
-                      onPressed: () => navigationTapped(item['index'])),
-                ),
               SizedBox(width: 5),
             ],
           ),
         ));
   }
 
-  /* buildFab() {
+  buildFab() {
     return Container(
       height: 45.0,
       width: 45.0,
@@ -91,7 +91,7 @@ class _MainScreenState extends State<MainScreen> {
         mini: true,
       ),
     );
-  }*/
+  }
 
   void navigationTapped(int page) {
     setState(() {

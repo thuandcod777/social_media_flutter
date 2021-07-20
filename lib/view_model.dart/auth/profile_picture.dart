@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
-import 'package:social_media_flutter/model/post.dart';
 import 'package:social_media_flutter/services/post_service.dart';
 import 'package:social_media_flutter/utils/firebase.dart';
 
@@ -14,11 +13,6 @@ class ProfilePictureViewModel extends ChangeNotifier {
   String imgLink;
   final picker = ImagePicker();
   bool loading = false;
-
-  setPost(PostModel post) {
-    imgLink = post.mediaUrl;
-    notifyListeners();
-  }
 
   pickImage({bool camera = false, BuildContext context}) async {
     loading = true;
@@ -79,7 +73,7 @@ class ProfilePictureViewModel extends ChangeNotifier {
     }
   }
 
-  resetPost() {
+  resetPicture() {
     mediaUrl = null;
     notifyListeners();
   }
