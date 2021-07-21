@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_media_flutter/model/user.dart';
+import 'package:social_media_flutter/screens/main/main_screen.dart';
 import 'package:social_media_flutter/screens/widget/button_widget.dart';
 import 'package:social_media_flutter/screens/widget/custom_image.dart';
 import 'package:social_media_flutter/utils/firebase.dart';
@@ -86,6 +87,8 @@ class _CreatePostState extends State<CreatePost> {
                                 Padding(
                                   padding: const EdgeInsets.only(left: 5.0),
                                   child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Row(
                                         children: [
@@ -245,6 +248,7 @@ class _CreatePostState extends State<CreatePost> {
                       function: () async {
                         await postsViewModel.uploadPosts(context);
                         postsViewModel.resetPost();
+                        Navigator.pushReplacementNamed(context, MainScreen.id);
                       }),
                   SizedBox(
                     height: 10.0,

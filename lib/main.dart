@@ -4,6 +4,7 @@ import 'package:social_media_flutter/constants/Constantcolors.dart';
 import 'package:social_media_flutter/screens/login/login.dart';
 import 'package:social_media_flutter/screens/main/main_screen.dart';
 import 'package:social_media_flutter/screens/post/create_post.dart';
+import 'package:social_media_flutter/screens/profile/profile.dart';
 import 'package:social_media_flutter/screens/profile_picture/profile_picture.dart';
 import 'package:social_media_flutter/screens/register/register.dart';
 import 'package:social_media_flutter/utils/config.dart';
@@ -38,6 +39,7 @@ class MyApp extends StatelessWidget {
           Login.id: (context) => Login(),
           Registers.id: (context) => Registers(),
           ProfilePicture.id: (context) => ProfilePicture(),
+          ProfileScreen.id: (context) => ProfileScreen(),
           CreatePost.id: (context) => CreatePost()
         },
       ),

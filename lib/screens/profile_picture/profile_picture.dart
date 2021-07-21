@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:provider/provider.dart';
+import 'package:social_media_flutter/screens/main/main_screen.dart';
 import 'package:social_media_flutter/screens/widget/custom_image.dart';
 import 'package:social_media_flutter/view_model.dart/auth/profile_picture.dart';
 import 'package:social_media_flutter/view_model.dart/auth/show_image_choices_widget.dart';
 
 class ProfilePicture extends StatefulWidget {
-  static const id = 'profile_screen';
+  static const id = 'profile_picture_screen';
   const ProfilePicture({Key key}) : super(key: key);
 
   @override
@@ -81,6 +82,7 @@ class _ProfilePictureState extends State<ProfilePicture> {
                 ElevatedButton(
                     onPressed: () {
                       viewModel.uploadProfilePicture(context);
+                      Navigator.pushReplacementNamed(context, MainScreen.id);
                     },
                     style: ButtonStyle(
                       backgroundColor:

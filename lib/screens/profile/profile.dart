@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:social_media_flutter/model/user.dart';
 import 'package:social_media_flutter/screens/login/login.dart';
@@ -6,6 +7,7 @@ import 'package:social_media_flutter/screens/widget/button_widget.dart';
 import 'package:social_media_flutter/utils/firebase.dart';
 
 class ProfileScreen extends StatefulWidget {
+  static const id = 'profile_screen';
   final profileId;
   const ProfileScreen({this.profileId, Key key}) : super(key: key);
 
@@ -28,27 +30,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
         backgroundColor: Colors.orange,
         title: Text('Person'),
         actions: [
-          /*widget.profileId == firebaseAuth.currentUser.uid
-              ?*/
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.only(right: 8.0),
-              child: GestureDetector(
-                onTap: () {
-                  firebaseAuth.signOut();
-                  Navigator.pushReplacementNamed(context, Login.id);
-                },
-                child: Text(
-                  'Log Out',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w900,
-                      fontSize: 15.0,
-                      color: Colors.white),
-                ),
-              ),
-            ),
-          )
-          /* : SizedBox()*/
+          widget.profileId == firebaseAuth.currentUser.uid
+              ? Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: GestureDetector(
+                      onTap: () {
+                        firebaseAuth.signOut();
+                        Navigator.pushReplacementNamed(context, Login.id);
+                      },
+                      child: Text(
+                        'Log Out',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w900,
+                            fontSize: 15.0,
+                            color: Colors.white),
+                      ),
+                    ),
+                  ),
+                )
+              : SizedBox()
         ],
       ),
       body: CustomScrollView(
@@ -63,8 +64,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             expandedHeight: 320.0,
             flexibleSpace: FlexibleSpaceBar(
               background: StreamBuilder(
-                stream: usersRef.doc(currentUserId()).snapshots(),
-                // ignore: missing_return
+                stream: usersRef.doc(widget.profileId).snapshots(),
                 builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
                   if (snapshot.hasData) {
                     Users user = Users.fromJson(snapshot.data.data());
@@ -150,6 +150,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ],
                     );
                   }
+
+                  return Container();
                 },
               ),
             ),
