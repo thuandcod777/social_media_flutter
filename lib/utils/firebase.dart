@@ -12,6 +12,7 @@ final Uuid uuid = Uuid();
 CollectionReference usersRef = firestore.collection('users');
 CollectionReference postRef = firestore.collection('posts');
 CollectionReference likesRef = firestore.collection('likes');
+CollectionReference commentRef = firestore.collection('comments');
 
 Reference profilePic = storage.ref().child('profilePic');
 Reference posts = storage.ref().child('posts');

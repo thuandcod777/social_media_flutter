@@ -32,4 +32,17 @@ class PostService extends Service {
       print(e);
     });
   }
+
+  uploadComment(String currentUserId, String comment, String postId,
+      String ownerId, String mediaPostUrl) async {
+    DocumentSnapshot doc = await usersRef.doc(currentUserId).get();
+    Users user = Users.fromJson(doc.data());
+    await commentRef.doc(postId).collection("comments").add({
+      "username": user.username,
+      "comment": comment,
+      "timestamp": Timestamp.now(),
+      "userDp": user.photoUrl,
+      "userId": user.id,
+    });
+  }
 }
