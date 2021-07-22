@@ -45,4 +45,21 @@ class PostService extends Service {
       "userId": user.id,
     });
   }
+
+  addLikesToNotification(String type, String username, String userId,
+      String postId, String mediaPostUrl, String ownerId, String userDp) async {
+    await notificationRef
+        .doc(ownerId)
+        .collection('notifications')
+        .doc(postId)
+        .set({
+      "type": "like",
+      "username": username,
+      "userId": firebaseAuth.currentUser.uid,
+      "userDp": userDp,
+      "postId": postId,
+      "mediaPostUrl": mediaPostUrl,
+      "timestamp": Timestamp.now(),
+    });
+  }
 }

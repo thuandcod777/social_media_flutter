@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:social_media_flutter/screens/message/message.dart';
 import 'package:social_media_flutter/screens/profile/profile.dart';
 import 'package:social_media_flutter/screens/timeline/time_line.dart';
 import 'package:animations/animations.dart';
@@ -85,10 +84,10 @@ class _MainScreenState extends State<MainScreen> {
     return Container(
       height: 45.0,
       width: 45.0,
-      // ignore: missing_required_param
       child: FabContainer(
         icon: Icons.add,
         mini: true,
+        page: null,
       ),
     );
   }

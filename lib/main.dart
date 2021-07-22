@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:social_media_flutter/constants/Constantcolors.dart';
 import 'package:social_media_flutter/screens/login/login.dart';
 import 'package:social_media_flutter/screens/main/main_screen.dart';
+import 'package:social_media_flutter/screens/notification/activity.dart';
 import 'package:social_media_flutter/screens/post/create_post.dart';
 import 'package:social_media_flutter/screens/profile/profile.dart';
 import 'package:social_media_flutter/screens/profile_picture/profile_picture.dart';
@@ -21,7 +22,6 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     final ConstantColors constantColors = ConstantColors();
@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
           Registers.id: (context) => Registers(),
           ProfilePicture.id: (context) => ProfilePicture(),
           ProfileScreen.id: (context) => ProfileScreen(),
-          CreatePost.id: (context) => CreatePost()
+          CreatePost.id: (context) => CreatePost(),
         },
       ),
       providers: [

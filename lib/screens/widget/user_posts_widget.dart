@@ -105,6 +105,7 @@ class UserPost extends StatelessWidget {
                         'postId': post.postId,
                         'dateCreated': Timestamp.now()
                       });
+                      addLikeToNotification();
                     } else {
                       likesRef.doc(docs[0].id).delete();
                     }
@@ -379,5 +380,16 @@ class UserPost extends StatelessWidget {
         CupertinoPageRoute(
           builder: (_) => ProfileScreen(profileId: profileId),
         ));
+  }
+
+  addLikeToNotification() async {
+    bool isNotMe = currentUserId() != post.ownerId;
+
+    if (isNotMe) {
+      DocumentSnapshot doc = await usersRef.doc(currentUserId()).get();
+      Users user = Users.fromJson(doc.data());
+      service.addLikesToNotification("likes", user.username, currentUserId(),
+          post.postId, post.mediaPostUrl, post.ownerId, user.photoUrl);
+    }
   }
 }

@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:social_media_flutter/model/post.dart';
+import 'package:social_media_flutter/screens/notification/activity.dart';
 import 'package:social_media_flutter/screens/widget/circular_progress.dart';
 import 'package:social_media_flutter/screens/widget/user_posts_widget.dart';
 import 'package:social_media_flutter/utils/firebase.dart';
@@ -89,7 +91,17 @@ class _TimeLineScreenState extends State<TimeLineScreen> {
           ),
           centerTitle: true,
           actions: [
-            IconButton(icon: Icon(Icons.chat_bubble), onPressed: () {}),
+            Row(
+              children: [
+                IconButton(
+                    icon: Icon(Icons.notifications),
+                    onPressed: () {
+                      Navigator.of(context).push(
+                          CupertinoPageRoute(builder: (_) => Activities()));
+                    }),
+                IconButton(icon: Icon(Icons.chat_bubble), onPressed: () {}),
+              ],
+            ),
           ],
         ),
         body: isLoading
