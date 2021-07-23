@@ -245,7 +245,7 @@ class _CreatePostState extends State<CreatePost> {
                   ),
                   ButtonCustom(
                       text: 'Post',
-                      function: () async {
+                      callback: () async {
                         await postsViewModel.uploadPosts(context);
                         postsViewModel.resetPost();
                         Navigator.pushReplacementNamed(context, MainScreen.id);

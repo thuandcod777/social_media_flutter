@@ -21,11 +21,28 @@ class _ActivitiesState extends State<Activities> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.orange,
         title: Text('Notification'),
         centerTitle: true,
+        actions: [
+          GestureDetector(
+            onTap: () {
+              deleteAllItem();
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Text(
+                'Clear',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          )
+        ],
       ),
-      body: getActivities(),
+      body: ListView(
+        children: [getActivities()],
+      ),
     );
   }
 
@@ -49,5 +66,18 @@ class _ActivitiesState extends State<Activities> {
         },
       ),
     );
+  }
+
+  deleteAllItem() async {
+    QuerySnapshot notificationSnap = await notificationRef
+        .doc(firebaseAuth.currentUser.uid)
+        .collection('notifications')
+        .get();
+
+    notificationSnap.docs.forEach((doc) {
+      if (doc.exists) {
+        doc.reference.delete();
+      }
+    });
   }
 }

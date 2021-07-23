@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:social_media_flutter/model/user.dart';
@@ -18,9 +19,29 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   bool isToggle = false;
+  User user;
+  bool isFollowing = false;
 
   currentUserId() {
     return firebaseAuth.currentUser.uid;
+  }
+
+  @override
+  void initState() {
+    checkIfFollowing();
+    super.initState();
+  }
+
+  checkIfFollowing() async {
+    DocumentSnapshot doc = await followerRef
+        .doc(widget.profileId)
+        .collection('userFollowers')
+        .doc(currentUserId())
+        .get();
+
+    setState(() {
+      isFollowing = doc.exists;
+    });
   }
 
   @override
@@ -209,9 +230,121 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   buildProfileButton() {
-    return ButtonCustom(
-      text: 'Edit Profile',
-      function: () {},
-    );
+    bool isMe = widget.profileId == firebaseAuth.currentUser.uid;
+
+    if (isMe) {
+      /*return GestureDetector(
+          onTap: () {
+            handleUnfollow();
+          },
+          child: Container(
+              height: 40.0,
+              width: 170.0,
+              decoration: BoxDecoration(
+                  color: Colors.orange,
+                  borderRadius: BorderRadius.circular(10.0)),
+              child: Center(
+                child: Text(
+                  'Edit Profile',
+                  style: TextStyle(color: Colors.white),
+                ),
+              )));*/
+      return ButtonCustom(
+        text: 'Edit Profile',
+        callback: () {},
+      );
+    } else if (isFollowing) {
+      /*return GestureDetector(
+          onTap: () {
+            handleUnfollow();
+          },
+          child: Container(
+              height: 40.0,
+              width: 170.0,
+              decoration: BoxDecoration(
+                  color: Colors.orange,
+                  borderRadius: BorderRadius.circular(10.0)),
+              child: Center(
+                child: Text(
+                  'Unfollow',
+                  style: TextStyle(color: Colors.white),
+                ),
+              )));*/
+
+      return ButtonCustom(
+        text: 'UnFollow',
+        callback: () => handleUnfollow(),
+      );
+    } else if (!isFollowing) {
+      /* return GestureDetector(
+          onTap: () {
+            handleFollow();
+          },
+          child: Container(
+              height: 30.0,
+              width: 100.0,
+              decoration: BoxDecoration(
+                  color: Colors.orange,
+                  borderRadius: BorderRadius.circular(17.0)),
+              child: Center(
+                child: Text(
+                  'Follow',
+                  style: TextStyle(color: Colors.white),
+                ),
+              )));*/
+      return ButtonCustom(
+        text: 'Follow',
+        callback: () => handleFollow()(),
+      );
+    }
+  }
+
+  handleFollow() async {
+    DocumentSnapshot doc = await usersRef.doc(currentUserId()).get();
+    // UserModel users = UserModel.fromJson(doc.data());
+
+    setState(() {
+      isFollowing = true;
+    });
+
+    followerRef
+        .doc(widget.profileId)
+        .collection('userFollowers')
+        .doc(currentUserId())
+        .set({});
+    followingRef
+        .doc(currentUserId())
+        .collection('userFollowing')
+        .doc(widget.profileId)
+        .set({});
+  }
+
+  handleUnfollow() async {
+    DocumentSnapshot doc = await usersRef.doc(currentUserId()).get();
+    // UserModel users = UserModel.fromJson(doc.data());
+
+    followerRef
+        .doc(widget.profileId)
+        .collection('userFollowers')
+        .doc(currentUserId())
+        .get()
+        .then((doc) {
+      if (doc.exists) {
+        doc.reference.delete();
+      }
+    });
+    followingRef
+        .doc(currentUserId())
+        .collection('userFollowing')
+        .doc(widget.profileId)
+        .get()
+        .then((doc) {
+      if (doc.exists) {
+        doc.reference.delete();
+      }
+      setState(() {
+        isFollowing = false;
+      });
+    });
   }
 }

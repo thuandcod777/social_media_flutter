@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:social_media_flutter/model/notification.dart';
+import 'package:social_media_flutter/model/post.dart';
 import 'package:social_media_flutter/screens/widget/activity_notification_detail_view.dart';
 import 'package:social_media_flutter/screens/widget/circular_progress.dart';
 import 'package:social_media_flutter/utils/firebase.dart';
@@ -9,6 +10,7 @@ import 'package:timeago/timeago.dart' as timeago;
 
 class ActivityItems extends StatefulWidget {
   ActivityModel activity;
+
   ActivityItems({this.activity});
 
   @override
@@ -36,8 +38,9 @@ class _ActivityItemsState extends State<ActivityItems> {
               ListTile(
                 onTap: () {
                   Navigator.of(context).push(CupertinoPageRoute(
-                      builder: (_) =>
-                          ActivityDetailView(activity: widget.activity)));
+                      builder: (_) => ActivityDetailView(
+                            activity: widget.activity,
+                          )));
                 },
                 leading: CircleAvatar(
                   radius: 25.0,
