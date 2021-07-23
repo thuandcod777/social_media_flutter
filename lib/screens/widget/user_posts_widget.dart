@@ -89,7 +89,7 @@ class UserPost extends StatelessWidget {
           .where('userId', isEqualTo: currentUserId())
           .snapshots(),
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        List<QueryDocumentSnapshot> docs = snapshot.data.docs ?? [];
+        List<QueryDocumentSnapshot> docs = snapshot.data?.docs ?? [];
         if (snapshot.hasData) {
           return Row(
             children: [
@@ -114,19 +114,21 @@ class UserPost extends StatelessWidget {
                           post.ownerId, post.postId, currentUserId());
                     }
                   }),
-              StreamBuilder(
-                  stream: likesRef
-                      .where('postId', isEqualTo: post.postId)
-                      .snapshots(),
-                  builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                    if (snapshot.hasData) {
-                      QuerySnapshot snap = snapshot.data;
-                      List<DocumentSnapshot> docs = snap.docs;
-                      return buildLikeCount(context, docs.length ?? 0);
-                    } else {
-                      return buildLikeCount(context, 0);
-                    }
-                  }),
+              Flexible(
+                child: StreamBuilder(
+                    stream: likesRef
+                        .where('postId', isEqualTo: post.postId)
+                        .snapshots(),
+                    builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (snapshot.hasData) {
+                        QuerySnapshot snap = snapshot.data;
+                        List<DocumentSnapshot> docs = snap.docs;
+                        return buildLikeCount(context, docs.length ?? 0);
+                      } else {
+                        return buildLikeCount(context, 0);
+                      }
+                    }),
+              ),
               IconButton(
                   icon: Icon(CupertinoIcons.chat_bubble),
                   onPressed: () {
@@ -169,30 +171,13 @@ class UserPost extends StatelessWidget {
         });
   }*/
 
-  addCommentToNotification() async {
-    bool isNotMe = currentUserId() != post.ownerId;
-    if (isNotMe) {
-      DocumentSnapshot doc = await usersRef.doc(currentUserId()).get();
-      Users user = Users.fromJson(doc.data());
-      service.addCommentToNotification(
-          "comment",
-          activity.commentData,
-          activity.username,
-          activity.userId,
-          activity.postId,
-          activity.mediaPostUrl,
-          post.ownerId,
-          activity.userDp);
-    }
-  }
-
   addLikeToNotification() async {
     bool isNotMe = currentUserId() != post.ownerId;
 
     if (isNotMe) {
       DocumentSnapshot doc = await usersRef.doc(currentUserId()).get();
-      Users user = Users.fromJson(doc.data());
-      service.addLikesToNotification("likes", user.username, currentUserId(),
+      UserModel user = UserModel.fromJson(doc.data());
+      service.addLikesToNotification("like", user.username, currentUserId(),
           post.postId, post.mediaPostUrl, post.ownerId, user.photoUrl);
     }
   }
@@ -203,7 +188,7 @@ class UserPost extends StatelessWidget {
 
     if (isNotMe) {
       DocumentSnapshot doc = await usersRef.doc(currentUser).get();
-      Users user = Users.fromJson(doc.data());
+      UserModel user = UserModel.fromJson(doc.data());
       notificationRef
           .doc(ownerId)
           .collection('notification')
@@ -347,7 +332,7 @@ class UserPost extends StatelessWidget {
         stream: usersRef.doc(post.ownerId).snapshots(),
         builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           if (snapshot.hasData) {
-            Users user = Users.fromJson(snapshot.data.data());
+            UserModel user = UserModel.fromJson(snapshot.data.data());
             return Align(
               alignment: Alignment.topCenter,
               child: Container(
@@ -360,7 +345,9 @@ class UserPost extends StatelessWidget {
                   ),
                 ),
                 child: GestureDetector(
-                  onTap: () => showProfile(context, profileId: user.id),
+                  onTap: () {
+                    showProfile(context, profileId: user.id);
+                  },
                   child: Padding(
                     padding: const EdgeInsets.only(left: 10.0, top: 10.0),
                     child: Row(

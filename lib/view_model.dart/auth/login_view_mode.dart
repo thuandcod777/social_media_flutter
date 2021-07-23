@@ -4,8 +4,7 @@ import 'package:social_media_flutter/services/api/auth_service.dart';
 
 class LoginViewModel extends ChangeNotifier {
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-  GlobalKey<FormState> formKey =
-      GlobalKey<FormState>(debugLabel: '_loginScreenkey');
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   AuthService auth = AuthService();
   String email, password;

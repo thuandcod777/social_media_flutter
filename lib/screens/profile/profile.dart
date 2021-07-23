@@ -9,7 +9,8 @@ import 'package:social_media_flutter/utils/firebase.dart';
 class ProfileScreen extends StatefulWidget {
   static const id = 'profile_screen';
   final profileId;
-  const ProfileScreen({this.profileId, Key key}) : super(key: key);
+
+  ProfileScreen({this.profileId, Key key}) : super(key: key);
 
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
@@ -67,7 +68,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 stream: usersRef.doc(widget.profileId).snapshots(),
                 builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
                   if (snapshot.hasData) {
-                    Users user = Users.fromJson(snapshot.data.data());
+                    UserModel user = UserModel.fromJson(snapshot.data.data());
                     return Column(
                       children: [
                         Padding(

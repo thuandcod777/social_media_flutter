@@ -68,10 +68,10 @@ class _CreatePostState extends State<CreatePost> {
                   StreamBuilder(
                       stream: usersRef.doc(currentUserId()).snapshots(),
                       builder:
-                          // ignore: missing_return
                           (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
                         if (snapshot.hasData) {
-                          Users user = Users.fromJson(snapshot.data.data());
+                          UserModel user =
+                              UserModel.fromJson(snapshot.data.data());
                           return Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Row(

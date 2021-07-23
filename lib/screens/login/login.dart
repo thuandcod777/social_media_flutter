@@ -20,6 +20,7 @@ class _LoginState extends State<Login> {
     LoginViewModel viewModel = Provider.of<LoginViewModel>(context);
 
     return Scaffold(
+      key: viewModel.scaffoldKey,
       backgroundColor: Colors.orange,
       body: ListView(
         children: [

@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Users {
-  String userid;
+class UserModel {
   String username;
   String photoUrl;
   String country;
@@ -10,9 +9,8 @@ class Users {
   bool isOnline;
   String id;
 
-  Users(
-      {this.userid,
-      this.username,
+  UserModel(
+      {this.username,
       this.singnedUpAt,
       this.email,
       this.photoUrl,
@@ -20,7 +18,7 @@ class Users {
       this.isOnline,
       this.id});
 
-  Users.fromJson(Map<String, dynamic> json) {
+  UserModel.fromJson(Map<String, dynamic> json) {
     username = json['username'];
     singnedUpAt = json['singnedUpAt'];
     photoUrl = json['photoUrl'];

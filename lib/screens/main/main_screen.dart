@@ -3,6 +3,7 @@ import 'package:social_media_flutter/screens/profile/profile.dart';
 import 'package:social_media_flutter/screens/timeline/time_line.dart';
 import 'package:animations/animations.dart';
 import 'package:social_media_flutter/screens/widget/fab_container.dart';
+import 'package:social_media_flutter/utils/firebase.dart';
 
 class MainScreen extends StatefulWidget {
   static const id = 'main_screen';
@@ -31,7 +32,9 @@ class _MainScreenState extends State<MainScreen> {
     {
       'title': 'Profile',
       'icon': Icons.person,
-      'page': ProfileScreen(),
+      'page': ProfileScreen(
+        profileId: firebaseAuth.currentUser.uid,
+      ),
       'index': 2,
     }
   ];

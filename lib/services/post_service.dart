@@ -17,7 +17,7 @@ class PostService extends Service {
     String link = await uploadImage(posts, image);
     DocumentSnapshot doc =
         await usersRef.doc(firebaseAuth.currentUser.uid).get();
-    Users user = Users.fromJson(doc.data());
+    UserModel user = UserModel.fromJson(doc.data());
     var ref = postRef.doc();
     ref.set({
       "id": ref.id,
@@ -36,7 +36,7 @@ class PostService extends Service {
   uploadComment(String currentUserId, String comment, String postId,
       String ownerId, String mediaPostUrl) async {
     DocumentSnapshot doc = await usersRef.doc(currentUserId).get();
-    Users user = Users.fromJson(doc.data());
+    UserModel user = UserModel.fromJson(doc.data());
     await commentRef.doc(postId).collection("comments").add({
       "username": user.username,
       "comment": comment,

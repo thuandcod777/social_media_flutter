@@ -1,14 +1,19 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:social_media_flutter/model/notification.dart';
+import 'package:social_media_flutter/model/post.dart';
+import 'package:social_media_flutter/model/user.dart';
 import 'package:social_media_flutter/screens/profile/profile.dart';
 import 'package:social_media_flutter/screens/widget/circular_progress.dart';
+import 'package:social_media_flutter/utils/firebase.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class ActivityDetailView extends StatefulWidget {
   ActivityModel activity;
-  ActivityDetailView({this.activity, key}) : super(key: key);
+  PostModel post;
+  ActivityDetailView({this.post, this.activity});
 
   @override
   _ActivityDetailViewState createState() => _ActivityDetailViewState();
@@ -27,6 +32,11 @@ class _ActivityDetailViewState extends State<ActivityDetailView> {
           },
           child: Icon(Icons.keyboard_backspace),
         ),
+        title: Text(
+          'Comments',
+          style: TextStyle(color: Colors.white),
+        ),
+        centerTitle: true,
       ),
       body: ListView(
         children: [
