@@ -108,6 +108,8 @@ class UserPost extends StatelessWidget {
                       addLikeToNotification();
                     } else {
                       likesRef.doc(docs[0].id).delete();
+                      removeLikeFromNotification(
+                          post.ownerId, post.postId, currentUserId());
                     }
                   }),
               StreamBuilder(
@@ -164,6 +166,35 @@ class UserPost extends StatelessWidget {
           return Container();
         });
   }*/
+
+  addLikeToNotification() async {
+    bool isNotMe = currentUserId() != post.ownerId;
+
+    if (isNotMe) {
+      DocumentSnapshot doc = await usersRef.doc(currentUserId()).get();
+      Users user = Users.fromJson(doc.data());
+      service.addLikesToNotification("likes", user.username, currentUserId(),
+          post.postId, post.mediaPostUrl, post.ownerId, user.photoUrl);
+    }
+  }
+
+  removeLikeFromNotification(
+      String ownerId, String postId, String currentUser) async {
+    bool isNotMe = currentUser != ownerId;
+
+    if (isNotMe) {
+      DocumentSnapshot doc = await usersRef.doc(currentUser).get();
+      Users user = Users.fromJson(doc.data());
+      notificationRef
+          .doc(ownerId)
+          .collection('notification')
+          .doc(postId)
+          .get()
+          .then((doc) => {
+                if (doc.exists) {doc.reference.delete()}
+              });
+    }
+  }
 
   buildComment(BuildContext context) {
     return showModalBottomSheet(
@@ -380,16 +411,5 @@ class UserPost extends StatelessWidget {
         CupertinoPageRoute(
           builder: (_) => ProfileScreen(profileId: profileId),
         ));
-  }
-
-  addLikeToNotification() async {
-    bool isNotMe = currentUserId() != post.ownerId;
-
-    if (isNotMe) {
-      DocumentSnapshot doc = await usersRef.doc(currentUserId()).get();
-      Users user = Users.fromJson(doc.data());
-      service.addLikesToNotification("likes", user.username, currentUserId(),
-          post.postId, post.mediaPostUrl, post.ownerId, user.photoUrl);
-    }
   }
 }

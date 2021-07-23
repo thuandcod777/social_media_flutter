@@ -26,6 +26,7 @@ class ActivityModel {
     username = json['username'];
     userId = json['userId'];
     userDp = json['userDp'];
+    postId = json['postId'];
     mediaPostUrl = json['mediaPostUrl'];
     commentData = json['commentData'];
     timestamp = json['timestamp'];
@@ -36,7 +37,8 @@ class ActivityModel {
     data['type'] = this.type;
     data['username'] = this.type;
     data['userId'] = this.type;
-    data['userDp'] = this.type;
+    data['userDp'] = this.userDp;
+    data['postId'] = this.postId;
     data['mediaPostUrl'] = this.type;
     data['commentData'] = this.type;
     data['timestamp'] = this.type;

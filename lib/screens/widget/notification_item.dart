@@ -9,7 +9,7 @@ import 'package:timeago/timeago.dart' as timeago;
 
 class ActivityItems extends StatefulWidget {
   ActivityModel activity;
-  ActivityItems({this.activity, key}) : super(key: key);
+  ActivityItems({this.activity});
 
   @override
   _ActivityItemsState createState() => _ActivityItemsState();
@@ -87,15 +87,14 @@ class _ActivityItemsState extends State<ActivityItems> {
     );
   }
 
-  delete() {
+  delete() async {
     notificationRef
         .doc(firebaseAuth.currentUser.uid)
-        .collection('notification')
+        .collection('notifications')
         .doc(widget.activity.postId)
-        .get()
-        .then((doc) => {
-              if (doc.exists) {doc.reference.delete()}
-            });
+          ..get().then((doc) => {
+                if (doc.exists) {doc.reference.delete()}
+              });
   }
 
   buildTextCongiguration() {
