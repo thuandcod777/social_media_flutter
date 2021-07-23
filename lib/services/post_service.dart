@@ -44,6 +44,12 @@ class PostService extends Service {
       "userDp": user.photoUrl,
       "userId": user.id,
     });
+
+    bool isNotMe = ownerId != currentUserId;
+    if (isNotMe) {
+      addCommentToNotification("comment", comment, user.username, user.id,
+          postId, mediaPostUrl, ownerId, user.photoUrl);
+    }
   }
 
   addLikesToNotification(String type, String username, String userId,
@@ -53,10 +59,32 @@ class PostService extends Service {
         .collection('notifications')
         .doc(postId)
         .set({
-      "type": "like",
+      "type": type,
       "username": username,
       "userId": firebaseAuth.currentUser.uid,
       "userDp": userDp,
+      "postId": postId,
+      "mediaPostUrl": mediaPostUrl,
+      "timestamp": Timestamp.now(),
+    });
+  }
+
+  addCommentToNotification(
+      String type,
+      String commentData,
+      String username,
+      String userId,
+      String postId,
+      String mediaPostUrl,
+      String ownerId,
+      String userDp) async {
+    await notificationRef.doc(ownerId).collection('notifications').add({
+      "type": type,
+      "commentData": commentData,
+      "username": username,
+      "userId": userId,
+      "userDp": userDp,
+      "ownerId": ownerId,
       "postId": postId,
       "mediaPostUrl": mediaPostUrl,
       "timestamp": Timestamp.now(),

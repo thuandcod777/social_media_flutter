@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:social_media_flutter/model/comment.dart';
+import 'package:social_media_flutter/model/notification.dart';
 import 'package:social_media_flutter/model/post.dart';
 import 'package:social_media_flutter/model/user.dart';
 import 'package:social_media_flutter/screens/profile/profile.dart';
@@ -18,7 +19,8 @@ import 'package:timeago/timeago.dart' as timeago;
 
 class UserPost extends StatelessWidget {
   final PostModel post;
-  UserPost({this.post});
+  final ActivityModel activity;
+  UserPost({this.activity, this.post});
 
   final DateTime timestamp = DateTime.now();
 
@@ -167,6 +169,23 @@ class UserPost extends StatelessWidget {
         });
   }*/
 
+  addCommentToNotification() async {
+    bool isNotMe = currentUserId() != post.ownerId;
+    if (isNotMe) {
+      DocumentSnapshot doc = await usersRef.doc(currentUserId()).get();
+      Users user = Users.fromJson(doc.data());
+      service.addCommentToNotification(
+          "comment",
+          activity.commentData,
+          activity.username,
+          activity.userId,
+          activity.postId,
+          activity.mediaPostUrl,
+          post.ownerId,
+          activity.userDp);
+    }
+  }
+
   addLikeToNotification() async {
     bool isNotMe = currentUserId() != post.ownerId;
 
@@ -300,6 +319,7 @@ class UserPost extends StatelessWidget {
                                 post.postId,
                                 post.ownerId,
                                 post.mediaPostUrl);
+
                             commentsTEC.clear();
                           },
                           child: Icon(Icons.send)),

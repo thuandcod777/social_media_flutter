@@ -68,7 +68,7 @@ class _ActivityItemsState extends State<ActivityItems> {
   }
 
   previewConfiguration() {
-    if (widget.activity.type == "like") {
+    if (widget.activity.type == "like" || widget.activity.type == "comment") {
       return buildPreviewImage();
     } else {
       return Text('');
@@ -100,6 +100,8 @@ class _ActivityItemsState extends State<ActivityItems> {
   buildTextCongiguration() {
     if (widget.activity.type == "like") {
       return " liked your post";
+    } else if (widget.activity.type == "comment") {
+      return " comment for you ${widget.activity.commentData}";
     } else {
       return "Error: Unknown type '${widget.activity.type}'";
     }
