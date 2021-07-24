@@ -233,7 +233,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     bool isMe = widget.profileId == firebaseAuth.currentUser.uid;
 
     if (isMe) {
-      /*return GestureDetector(
+      return GestureDetector(
           onTap: () {
             handleUnfollow();
           },
@@ -248,13 +248,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   'Edit Profile',
                   style: TextStyle(color: Colors.white),
                 ),
-              )));*/
-      return ButtonCustom(
+              )));
+      /*return ButtonCustom(
         text: 'Edit Profile',
         callback: () {},
-      );
+      );*/
     } else if (isFollowing) {
-      /*return GestureDetector(
+      return GestureDetector(
           onTap: () {
             handleUnfollow();
           },
@@ -269,33 +269,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   'Unfollow',
                   style: TextStyle(color: Colors.white),
                 ),
-              )));*/
+              )));
 
-      return ButtonCustom(
+      /* return ButtonCustom(
         text: 'UnFollow',
         callback: () => handleUnfollow(),
-      );
+      );*/
     } else if (!isFollowing) {
-      /* return GestureDetector(
+      return GestureDetector(
           onTap: () {
             handleFollow();
           },
           child: Container(
-              height: 30.0,
-              width: 100.0,
+              height: 40.0,
+              width: 170.0,
               decoration: BoxDecoration(
                   color: Colors.orange,
-                  borderRadius: BorderRadius.circular(17.0)),
+                  borderRadius: BorderRadius.circular(10.0)),
               child: Center(
                 child: Text(
                   'Follow',
                   style: TextStyle(color: Colors.white),
                 ),
-              )));*/
-      return ButtonCustom(
+              )));
+      /*return ButtonCustom(
         text: 'Follow',
         callback: () => handleFollow()(),
-      );
+      );*/
     }
   }
 
