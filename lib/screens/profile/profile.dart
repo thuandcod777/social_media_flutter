@@ -2,9 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:social_media_flutter/model/post.dart';
 import 'package:social_media_flutter/model/user.dart';
 import 'package:social_media_flutter/screens/login/login.dart';
-import 'package:social_media_flutter/screens/widget/button_widget.dart';
+import 'package:social_media_flutter/screens/widget/circular_progress.dart';
+import 'package:social_media_flutter/screens/widget/post_title.dart';
+import 'package:social_media_flutter/screens/widget/stream_builder_wrapper.dart';
+import 'package:social_media_flutter/screens/widget/stream_grid_wrap.dart';
 import 'package:social_media_flutter/utils/firebase.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -18,9 +23,11 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  bool isToggle = false;
+  bool isToggle = true;
   User user;
   bool isFollowing = false;
+
+  final DateTime timestamp = DateTime.now();
 
   currentUserId() {
     return firebaseAuth.currentUser.uid;
@@ -126,42 +133,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Expanded(
-                                child: Column(
-                                  children: [
-                                    Text('0',
-                                        style: TextStyle(color: Colors.black)),
-                                    Text(
-                                      'Posts'.toUpperCase(),
-                                      style: TextStyle(color: Colors.black),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              Expanded(
-                                child: Column(
-                                  children: [
-                                    Text('0',
-                                        style: TextStyle(color: Colors.black)),
-                                    Text(
-                                      'Followers'.toUpperCase(),
-                                      style: TextStyle(color: Colors.black),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              Expanded(
-                                child: Column(
-                                  children: [
-                                    Text('0',
-                                        style: TextStyle(color: Colors.black)),
-                                    Text(
-                                      'Followings'.toUpperCase(),
-                                      style: TextStyle(color: Colors.black),
-                                    )
-                                  ],
-                                ),
-                              )
+                              Expanded(child: buildCountPost()),
+                              Expanded(child: buildCountFollower()),
+                              Expanded(child: buildCountFollowing()),
                             ],
                           ),
                         ),
@@ -196,6 +170,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ],
                 ),
               ),
+              buildPostView()
             ]);
           }))
         ],
@@ -301,7 +276,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   handleFollow() async {
     DocumentSnapshot doc = await usersRef.doc(currentUserId()).get();
-    // UserModel users = UserModel.fromJson(doc.data());
+    UserModel users = UserModel.fromJson(doc.data());
 
     setState(() {
       isFollowing = true;
@@ -317,12 +292,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
         .collection('userFollowing')
         .doc(widget.profileId)
         .set({});
+    notificationRef
+        .doc(widget.profileId)
+        .collection('notifications')
+        .doc(currentUserId())
+        .set({
+      "type": "follow",
+      "ownerId": widget.profileId,
+      "username": users.username,
+      "userId": users.id,
+      "userDp": users.photoUrl,
+      "timestamp": timestamp,
+    });
   }
 
   handleUnfollow() async {
     DocumentSnapshot doc = await usersRef.doc(currentUserId()).get();
-    // UserModel users = UserModel.fromJson(doc.data());
-
+    UserModel users = UserModel.fromJson(doc.data());
+    setState(() {
+      isFollowing = false;
+    });
     followerRef
         .doc(widget.profileId)
         .collection('userFollowers')
@@ -342,9 +331,118 @@ class _ProfileScreenState extends State<ProfileScreen> {
       if (doc.exists) {
         doc.reference.delete();
       }
-      setState(() {
-        isFollowing = false;
+
+      notificationRef
+          .doc(widget.profileId)
+          .collection('notifications')
+          .doc(currentUserId())
+          .get()
+          .then((doc) {
+        if (doc.exists) {
+          doc.reference.delete();
+        }
       });
     });
+  }
+
+  buildCountPost() {
+    return StreamBuilder(
+        stream:
+            postRef.where('ownerId', isEqualTo: widget.profileId).snapshots(),
+        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasData) {
+            QuerySnapshot snap = snapshot.data;
+            List<DocumentSnapshot> docs = snap.docs;
+            return buildCount("Posts", docs.length ?? 0);
+          } else {
+            return buildCount("Posts", 0);
+          }
+        });
+  }
+
+  buildCountFollower() {
+    return StreamBuilder(
+        stream: followerRef
+            .doc(widget.profileId)
+            .collection('userFollowers')
+            .snapshots(),
+        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasData) {
+            QuerySnapshot snap = snapshot.data;
+            List<DocumentSnapshot> docs = snap.docs;
+            return buildCount("Follower", docs.length ?? 0);
+          } else {
+            return buildCount("Follower", 0);
+          }
+        });
+  }
+
+  buildCountFollowing() {
+    return StreamBuilder(
+        stream: followingRef
+            .doc(widget.profileId)
+            .collection('userFollowing')
+            .snapshots(),
+        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasData) {
+            QuerySnapshot snap = snapshot.data;
+            List<DocumentSnapshot> docs = snap.docs;
+            return buildCount("Following", docs.length ?? 0);
+          } else {
+            return buildCount("Following", 0);
+          }
+        });
+  }
+
+  buildCount(String label, int count) {
+    return Column(
+      children: [Text(count.toString()), SizedBox(height: 3.0), Text(label)],
+    );
+  }
+
+  buildPostView() {
+    if (isToggle == true) {
+      return buildGridPost();
+    } else if (isToggle == false) {
+      return buildPost();
+    }
+  }
+
+  buildPost() {
+    return StreamBuilderWrapper(
+        shrinkWrap: true,
+        stream: postRef
+            .where('ownerId', isEqualTo: widget.profileId)
+            .orderBy('timestamp', descending: true)
+            .snapshots(),
+        physics: NeverScrollableScrollPhysics(),
+        itemBuilder: (_, DocumentSnapshot snapshot) {
+          PostModel posts = PostModel.fromJson(snapshot.data());
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 15.0),
+            child: PostTile(
+              post: posts,
+            ),
+          );
+        });
+  }
+
+  buildGridPost() {
+    return StreamGridWrapper(
+        shrinkWrap: true,
+        stream: postRef
+            .where('ownerId', isEqualTo: widget.profileId)
+            .orderBy('timestamp', descending: true)
+            .snapshots(),
+        physics: NeverScrollableScrollPhysics(),
+        itemBuilder: (_, DocumentSnapshot snapshot) {
+          PostModel posts = PostModel.fromJson(snapshot.data());
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 15.0),
+            child: PostTile(
+              post: posts,
+            ),
+          );
+        });
   }
 }

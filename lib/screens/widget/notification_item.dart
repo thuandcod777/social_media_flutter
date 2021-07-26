@@ -103,8 +103,10 @@ class _ActivityItemsState extends State<ActivityItems> {
   buildTextCongiguration() {
     if (widget.activity.type == "like") {
       return " liked your post";
+    } else if (widget.activity.type == "follow") {
+      return " is following you";
     } else if (widget.activity.type == "comment") {
-      return " comment for you ${widget.activity.commentData}";
+      return " commented for you ${widget.activity.commentData}";
     } else {
       return "Error: Unknown type '${widget.activity.type}'";
     }

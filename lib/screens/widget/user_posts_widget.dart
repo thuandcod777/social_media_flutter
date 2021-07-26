@@ -19,8 +19,8 @@ import 'package:timeago/timeago.dart' as timeago;
 
 class UserPost extends StatelessWidget {
   final PostModel post;
-  final ActivityModel activity;
-  UserPost({this.activity, this.post});
+  //final ActivityModel activity;
+  UserPost({this.post});
 
   final DateTime timestamp = DateTime.now();
 

@@ -3,15 +3,14 @@ import 'package:flutter/material.dart';
 class ButtonCustom extends StatelessWidget {
   String text;
   Function function;
-  final VoidCallback callback;
-  ButtonCustom({this.text, this.function, this.callback, Key key})
-      : super(key: key);
+
+  ButtonCustom({this.text, this.function, Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: GestureDetector(
-        onTap: this.callback,
+        onTap: function,
         child: Container(
           height: 40.0,
           width: 200.0,
