@@ -6,6 +6,7 @@ import 'package:flutter/rendering.dart';
 import 'package:social_media_flutter/model/post.dart';
 import 'package:social_media_flutter/model/user.dart';
 import 'package:social_media_flutter/screens/login/login.dart';
+import 'package:social_media_flutter/screens/message/conversation.dart';
 import 'package:social_media_flutter/screens/widget/circular_progress.dart';
 import 'package:social_media_flutter/screens/widget/post_title.dart';
 import 'package:social_media_flutter/screens/widget/stream_builder_wrapper.dart';
@@ -142,7 +143,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         SizedBox(
                           height: 20.0,
                         ),
-                        buildProfileButton(),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            buildProfileButton(),
+                            buildMessageButton()
+                          ],
+                        )
                       ],
                     );
                   }
@@ -212,18 +219,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
           onTap: () {
             handleUnfollow();
           },
-          child: Container(
-              height: 40.0,
-              width: 170.0,
-              decoration: BoxDecoration(
-                  color: Colors.orange,
-                  borderRadius: BorderRadius.circular(10.0)),
-              child: Center(
-                child: Text(
-                  'Edit Profile',
-                  style: TextStyle(color: Colors.white),
-                ),
-              )));
+          child: Padding(
+            padding: const EdgeInsets.only(left: 20.0),
+            child: Container(
+                height: 40.0,
+                width: MediaQuery.of(context).size.width * 0.80,
+                decoration: BoxDecoration(
+                    color: Colors.orange,
+                    borderRadius: BorderRadius.circular(10.0)),
+                child: Center(
+                  child: Text(
+                    'Edit Profile',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                )),
+          ));
       /*return ButtonCustom(
         text: 'Edit Profile',
         callback: () {},
@@ -274,6 +284,45 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  buildMessageButton() {
+    bool isMe = widget.profileId == firebaseAuth.currentUser.uid;
+    if (isMe) {
+      return Container();
+    } else {
+      return GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              CupertinoPageRoute(
+                builder: (_) => Conversation(
+                  profileId: widget.profileId,
+                  chatId: 'newChat',
+                ),
+              ),
+            );
+          },
+          child: Container(
+              height: 40.0,
+              width: 170.0,
+              decoration: BoxDecoration(
+                  color: Colors.orange,
+                  borderRadius: BorderRadius.circular(10.0)),
+              child: Center(
+                child: Text(
+                  'Messange',
+                  style: TextStyle(color: Colors.white),
+                ),
+              )));
+    }
+
+    /*return ButtonCustom(
+        text: 'Edit Profile',
+        callback: () {},
+      );*/
+  }
+
+  buildConverstation() {}
+
   handleFollow() async {
     DocumentSnapshot doc = await usersRef.doc(currentUserId()).get();
     UserModel users = UserModel.fromJson(doc.data());
@@ -286,12 +335,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
         .doc(widget.profileId)
         .collection('userFollowers')
         .doc(currentUserId())
-        .set({});
+        .set({
+      "username": users.username,
+      "userId": users.id,
+      "userDp": users.photoUrl,
+      "timestamp": timestamp,
+    });
     followingRef
         .doc(currentUserId())
         .collection('userFollowing')
         .doc(widget.profileId)
-        .set({});
+        .set({
+      "username": users.username,
+      "userId": users.id,
+      "userDp": users.photoUrl,
+      "timestamp": timestamp,
+    });
+
     notificationRef
         .doc(widget.profileId)
         .collection('notifications')

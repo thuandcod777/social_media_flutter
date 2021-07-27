@@ -13,7 +13,9 @@ import 'package:social_media_flutter/view_model.dart/auth/login_view_mode.dart';
 import 'package:social_media_flutter/view_model.dart/auth/profile_picture.dart';
 import 'package:social_media_flutter/view_model.dart/auth/register_view_model.dart';
 import 'package:social_media_flutter/view_model.dart/auth/show_image_choices_widget.dart';
+import 'package:social_media_flutter/view_model.dart/message/converation_viewmodel.dart';
 import 'package:social_media_flutter/view_model.dart/posts/posts_viewmodel.dart';
+import 'package:social_media_flutter/view_model.dart/user/user_view_model.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -52,6 +54,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<RegisterViewModel>(
             create: (_) => RegisterViewModel()),
         ChangeNotifierProvider<LoginViewModel>(create: (_) => LoginViewModel()),
+        ChangeNotifierProvider<ConversationViewModel>(
+            create: (_) => ConversationViewModel()),
+        ChangeNotifierProvider<UserViewModel>(create: (_) => UserViewModel()),
       ],
     );
   }

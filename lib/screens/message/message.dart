@@ -1,5 +1,11 @@
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:social_media_flutter/model/user.dart';
+import 'package:social_media_flutter/utils/firebase.dart';
 
 class MessageScreen extends StatefulWidget {
   const MessageScreen({Key key}) : super(key: key);
@@ -10,6 +16,34 @@ class MessageScreen extends StatefulWidget {
 
 class _MessageScreenState extends State<MessageScreen> {
   TextEditingController searchController = TextEditingController();
+  List<DocumentSnapshot> filteredUsers = [];
+  List<DocumentSnapshot> users = [];
+  User user;
+  bool loading = true;
+  currentUserId() {
+    firebaseAuth.currentUser.uid;
+  }
+
+  getUsers() async {
+    QuerySnapshot snap = await followingRef.get();
+    List<DocumentSnapshot> doc = snap.docs;
+    users = doc;
+    filteredUsers = doc;
+    setState(() {
+      loading = false;
+    });
+  }
+
+  @override
+  void initState() {
+    getUsers();
+    super.initState();
+  }
+
+  removeFromList(index) {
+    return filteredUsers.removeAt(index);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,6 +51,7 @@ class _MessageScreenState extends State<MessageScreen> {
         backgroundColor: Colors.orange,
         title: buildSearch(),
       ),
+      body: buildUser(),
     );
   }
 
@@ -49,4 +84,35 @@ class _MessageScreenState extends State<MessageScreen> {
           ),
         )),
       ));
+
+  buildUser() {
+    return ListView.builder(
+        itemCount: filteredUsers.length,
+        itemBuilder: (BuildContext context, int index) {
+          DocumentSnapshot doc = filteredUsers[index];
+          UserModel user = UserModel.fromJson(doc.data());
+          if (doc.id == currentUserId()) {
+            Timer(Duration(milliseconds: 500), () {
+              setState(() {
+                removeFromList(index);
+              });
+            });
+          }
+          return Column(
+            children: [
+              ListTile(
+                leading: CircleAvatar(
+                  radius: 35.0,
+                  backgroundImage: NetworkImage(user.photoUrl),
+                ),
+                title: Text(
+                  user.username,
+                  style: TextStyle(color: Colors.white),
+                ),
+                subtitle: Text(user.email),
+              )
+            ],
+          );
+        });
+  }
 }
