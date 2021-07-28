@@ -14,6 +14,8 @@ class Message {
     senderUid = json['senderUid'];
     if (json['type'] == 'text') {
       type = MessageType.TEXT;
+    } else {
+      type = MessageType.IMAGE;
     }
     time = json['time'];
   }
@@ -24,6 +26,8 @@ class Message {
     data['senderUid'] = this.senderUid;
     if (this.type == MessageType.TEXT) {
       data['type'] = 'text';
+    } else {
+      data['type'] = 'image';
     }
 
     data['time'] = this.time;

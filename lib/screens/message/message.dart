@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:social_media_flutter/model/user.dart';
+import 'package:social_media_flutter/screens/message/recent_chat.dart';
 import 'package:social_media_flutter/utils/firebase.dart';
 
 class MessageScreen extends StatefulWidget {
@@ -51,41 +51,42 @@ class _MessageScreenState extends State<MessageScreen> {
         backgroundColor: Colors.orange,
         title: buildSearch(),
       ),
-      body: buildUser(),
+      body: RecentChat(),
     );
   }
 
   buildSearch() => Container(
-      height: 40.0,
-      width: MediaQuery.of(context).size.width,
-      decoration: BoxDecoration(
-          color: Colors.white, borderRadius: BorderRadius.circular(20.0)),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 5.0),
-        child: Center(
-            child: TextFormField(
-          controller: searchController,
-          textAlignVertical: TextAlignVertical.center,
-          textCapitalization: TextCapitalization.sentences,
-          maxLengthEnforcement: MaxLengthEnforcement.enforced,
-          inputFormatters: [
-            LengthLimitingTextInputFormatter(20),
-          ],
-          decoration: InputDecoration(
-            suffixIcon: GestureDetector(
-              onTap: () {
-                searchController.clear();
-              },
-              child: Icon(Icons.delete, size: 12.0, color: Colors.black),
+        height: 40.0,
+        width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+            color: Colors.white, borderRadius: BorderRadius.circular(20.0)),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 5.0),
+          child: Center(
+              child: TextFormField(
+            controller: searchController,
+            textAlignVertical: TextAlignVertical.center,
+            textCapitalization: TextCapitalization.sentences,
+            maxLengthEnforcement: MaxLengthEnforcement.enforced,
+            inputFormatters: [
+              LengthLimitingTextInputFormatter(20),
+            ],
+            decoration: InputDecoration(
+              suffixIcon: GestureDetector(
+                onTap: () {
+                  searchController.clear();
+                },
+                child: Icon(Icons.delete, size: 12.0, color: Colors.black),
+              ),
+              contentPadding: EdgeInsets.only(bottom: 10.0, left: 10.0),
+              border: InputBorder.none,
+              hintText: 'Search...',
             ),
-            contentPadding: EdgeInsets.only(bottom: 10.0, left: 10.0),
-            border: InputBorder.none,
-            hintText: 'Search...',
-          ),
-        )),
-      ));
+          )),
+        ),
+      );
 
-  buildUser() {
+  /*buildUser() {
     return ListView.builder(
         itemCount: filteredUsers.length,
         itemBuilder: (BuildContext context, int index) {
@@ -114,5 +115,5 @@ class _MessageScreenState extends State<MessageScreen> {
             ],
           );
         });
-  }
+  }*/
 }

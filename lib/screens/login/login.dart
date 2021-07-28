@@ -50,8 +50,7 @@ class _LoginState extends State<Login> {
               ),
               GestureDetector(
                 onTap: () {
-                  Navigator.of(context)
-                      .push(CupertinoPageRoute(builder: (_) => Registers()));
+                  Navigator.pushReplacementNamed(context, Registers.id);
                 },
                 child: Text(
                   'Sign Up',

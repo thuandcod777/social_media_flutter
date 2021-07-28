@@ -112,19 +112,22 @@ class _TimeLineScreenState extends State<TimeLineScreen> {
         ),
         body: isLoading
             ? circularProgress(context)
-            : ListView.builder(
-                controller: _scrollController,
-                itemCount: post.length,
-                itemBuilder: (context, index) {
-                  internetChecker(context);
-                  PostModel posts = PostModel.fromJson(post[index].data());
-                  return Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: UserPost(
-                      post: posts,
-                    ),
-                  );
-                }));
+            : Container(
+                color: Colors.grey[100],
+                child: ListView.builder(
+                    controller: _scrollController,
+                    itemCount: post.length,
+                    itemBuilder: (context, index) {
+                      internetChecker(context);
+                      PostModel posts = PostModel.fromJson(post[index].data());
+                      return Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: UserPost(
+                          post: posts,
+                        ),
+                      );
+                    }),
+              ));
   }
 
   internetChecker(context) async {

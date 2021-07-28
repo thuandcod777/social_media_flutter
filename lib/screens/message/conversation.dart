@@ -28,37 +28,38 @@ class _Conversation extends State<Conversation> {
 
   TextEditingController messageController = TextEditingController();
   bool isFirst = false;
-  //String chatId;
+  String chatId;
 
   @override
   void initState() {
     super.initState();
+
     scrollController.addListener(() {
       focusNode.unfocus();
     });
 
-    /*if (widget.chatId == 'newChat') {
+    if (widget.chatId == 'newChat') {
       isFirst = true;
-    }*/
-    //chatId = widget.chatId;
+    }
+    chatId = widget.chatId;
 
-    /* messageController.addListener(() {
+    messageController.addListener(() {
       if (focusNode.hasFocus && messageController.text.isNotEmpty) {
         setTyping(true);
       } else if (!focusNode.hasFocus ||
           (focusNode.hasFocus && messageController.text.isEmpty)) {
         setTyping(false);
       }
-    });*/
+    });
   }
 
-  /* setTyping(typing) {
+  setTyping(typing) {
     UserViewModel viewModel = Provider.of<UserViewModel>(context);
     viewModel.setUser();
     var user = Provider.of<UserViewModel>(context, listen: true).user;
     Provider.of<ConversationViewModel>(context, listen: false)
         .setUserTyping(widget.chatId, user, typing);
-  }*/
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,99 +82,136 @@ class _Conversation extends State<Conversation> {
           titleSpacing: 0,
           title: buildUserName(),
         ),
-        body: Container(
-          color: Colors.white,
-          height: MediaQuery.of(context).size.height,
-          child: Column(
-            children: [
-              Flexible(
-                child: StreamBuilder(
-                  stream: messageListStream(widget.chatId),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      List messages = snapshot.data.docs;
-                      /*viewModel.setReadCount(
-                          widget.chatId, user, messages.length);*/
-                      return ListView.builder(
-                          // controller: scrollController,
-                          itemCount: messages.length,
-                          reverse: true,
-                          itemBuilder: (BuildContext context, int index) {
-                            Message message = Message.fromJson(
-                              messages.reversed.toList()[index].data(),
-                            );
+        body: SafeArea(
+          child: Container(
+            color: Colors.white,
+            height: MediaQuery.of(context).size.height,
+            child: Column(
+              children: [
+                Flexible(
+                  child: StreamBuilder(
+                    stream: messageListStream(widget.chatId),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        List messages = snapshot.data.docs;
+                        viewModel.setReadCount(
+                            widget.chatId, user, messages.length);
+                        return ListView.builder(
+                            controller: scrollController,
+                            itemCount: messages.length,
+                            reverse: true,
+                            itemBuilder: (BuildContext context, int index) {
+                              Message message = Message.fromJson(
+                                messages.reversed.toList()[index].data(),
+                              );
 
-                            return ChatBubble(
-                                message: '${message.content}',
-                                time: message.time,
-                                isMe: message.senderUid == user.uid,
-                                type: message.type);
-                          });
-                    } else {
-                      return Center(child: circularProgress(context));
-                    }
-                  },
-                ),
-              ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Container(
-                  color: Colors.white,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      IconButton(
-                          icon: Icon(
-                            Icons.photo_camera,
-                            color: Colors.black,
-                          ),
-                          onPressed: () {}),
-                      Flexible(
-                        child: TextField(
-                          style: TextStyle(color: Colors.black),
-                          controller: messageController,
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.all(10.0),
-                            enabledBorder: InputBorder.none,
-                            border: InputBorder.none,
-                            hintText: "Type your message",
-                            hintStyle: TextStyle(
-                              color: Colors.black,
-                            ),
-                          ),
-                          maxLines: null,
-                        ),
-                      ),
-                      IconButton(
-                          icon: Icon(
-                            Icons.send,
-                            color: Colors.black,
-                          ),
-                          onPressed: () {
-                            if (messageController.text.isNotEmpty) {
-                              sendMessage(viewModel, user);
-                            }
-                          })
-                    ],
+                              return ChatBubble(
+                                  message: '${message.content}',
+                                  time: message.time,
+                                  isMe: message.senderUid == user.uid,
+                                  type: message.type);
+                            });
+                      } else {
+                        return Center(child: circularProgress(context));
+                      }
+                    },
                   ),
                 ),
-              ),
-            ],
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    color: Colors.white,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        IconButton(
+                            icon: Icon(
+                              Icons.photo_camera,
+                              color: Colors.black,
+                            ),
+                            onPressed: () {
+                              showOption(viewModel, user);
+                            }),
+                        Flexible(
+                          child: TextField(
+                            style: TextStyle(color: Colors.black),
+                            controller: messageController,
+                            decoration: InputDecoration(
+                              contentPadding: EdgeInsets.all(10.0),
+                              enabledBorder: InputBorder.none,
+                              border: InputBorder.none,
+                              hintText: "Type your message",
+                              hintStyle: TextStyle(
+                                color: Colors.black,
+                              ),
+                            ),
+                            maxLines: null,
+                          ),
+                        ),
+                        IconButton(
+                            icon: Icon(
+                              Icons.send,
+                              color: Colors.black,
+                            ),
+                            onPressed: () {
+                              if (messageController.text.isNotEmpty) {
+                                sendMessage(viewModel, user);
+                              }
+                            })
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       );
     });
   }
 
-  sendMessage(ConversationViewModel viewModel, var user) async {
+  showOption(ConversationViewModel viewModel, var user) {
+    showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Container(
+            color: Colors.white,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ListTile(
+                  title: Text("Camera"),
+                  onTap: () {
+                    sendMessage(viewModel, user, imageType: 0, isImage: true);
+                  },
+                ),
+                ListTile(
+                  title: Text("Gallery"),
+                  onTap: () {
+                    sendMessage(viewModel, user, imageType: 1, isImage: true);
+                  },
+                )
+              ],
+            ),
+          );
+        });
+  }
+
+  sendMessage(ConversationViewModel viewModel, var user,
+      {bool isImage = false, int imageType}) async {
     String msg;
-    msg = messageController.text.trim();
-    messageController.clear();
+    if (isImage) {
+      msg = await viewModel.pickImage(
+          source: imageType, context: context, chatId: widget.chatId);
+    } else {
+      msg = messageController.text.trim();
+      messageController.clear();
+    }
 
     Message message = Message(
         content: '$msg',
         senderUid: user.uid,
-        type: MessageType.TEXT,
+        type: isImage ? MessageType.IMAGE : MessageType.TEXT,
         time: Timestamp.now());
 
     if (msg.isNotEmpty) {
@@ -181,12 +219,14 @@ class _Conversation extends State<Conversation> {
         String id = await viewModel.sendFirstMessage(widget.profileId, message);
         setState(() {
           isFirst = false;
-          // chatId = id;
+          chatId = id;
         });
       } else {
         viewModel.sendMessage(widget.chatId, message);
       }
     }
+
+    // viewModel.sendMessage(widget.chatId, message);
   }
 
   buildUserName() {

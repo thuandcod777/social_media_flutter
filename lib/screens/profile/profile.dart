@@ -159,27 +159,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
           ),
-          SliverList(delegate:
-              SliverChildBuilderDelegate((BuildContext context, int index) {
-            if (index > 0) return null;
-            return Column(children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: Row(
-                  children: [
-                    Text(
-                      'All Posts',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w900, color: Colors.grey),
+          Container(
+            child: SliverList(delegate:
+                SliverChildBuilderDelegate((BuildContext context, int index) {
+              if (index > 0) return null;
+              return Container(
+                height: MediaQuery.of(context).size.height,
+                color: Colors.grey[100],
+                child: Column(children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Row(
+                      children: [
+                        Text(
+                          'All Posts',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w900, color: Colors.grey),
+                        ),
+                        Spacer(),
+                        buildIcons(),
+                      ],
                     ),
-                    Spacer(),
-                    buildIcons(),
-                  ],
-                ),
-              ),
-              buildPostView()
-            ]);
-          }))
+                  ),
+                  buildPostView()
+                ]),
+              );
+            })),
+          )
         ],
       ),
     );
